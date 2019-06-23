@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+    <bean class="org.springframework.scheduling.quartz.JobDetailFactoryBean" id="jobDetail">
+        <!--指定具体的任务类-->
+        <property name="jobClass" value="com.quartz.spring.MyJob"/>
+        <!--指定任务名称-->
+        <property name="name" value="spring-quartz1"/>
+        <!--指定任务分组-->
+        <property name="group" value="spring-quartz-group"/>
+        <!--必须设置为true false党媒有活动的触发器与之关联时会删除该任务-->
+        <property name="durability" value="true"/>
+        <!--指定spring上下文-->
+        <property name="applicationContextJobDataKey" value="applicationContext"/>
+    </bean>
+
+    <!--定义触发器-->
+    <bean class="org.springframework.scheduling.quartz.CronTriggerFactoryBean" id="cronTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail"/>
+        <!--触发器的执行时间-->
+        <property name="cronExpression" value="0/5 * * * * ?"/>
+    </bean>
+    <!--定义调度器-->
+    <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTriggerFactoryBean"/>
+            </list>
+        </property>
+    </bean>
+</beans>
